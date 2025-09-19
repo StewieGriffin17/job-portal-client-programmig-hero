@@ -1,16 +1,27 @@
-import React, { Suspense } from 'react';
-import ApplicationStat from './ApplicationStat';
-import ApplicationList from './ApplicationList';
+import React, { Suspense } from "react";
+import ApplicationStat from "./ApplicationStat";
+import ApplicationList from "./ApplicationList";
+import useAuth from "../Hooks/useAuth";
+
+const myApplicationsPromise = (email) => {
+  return fetch(`http://localhost:3000/applications?email=${email}`).then(
+    (res) => res.json()
+  );
+};
 
 const MyApplications = () => {
-    return (
-        <div>
-            <ApplicationStat></ApplicationStat>
-            <Suspense fallback={"Loading Application List"}>
-                <ApplicationList></ApplicationList>
-            </Suspense>
-        </div>
-    );
+  const { user } = useAuth();
+
+  return (
+    <div>
+      <ApplicationStat></ApplicationStat>
+      <Suspense fallback={"Loading Application List"}>
+        <ApplicationList
+          myApplicationsPromise={myApplicationsPromise(user.email)}
+        ></ApplicationList>
+      </Suspense>
+    </div>
+  );
 };
 
 export default MyApplications;
