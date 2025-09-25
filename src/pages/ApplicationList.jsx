@@ -19,6 +19,7 @@ const ApplicationList = ({ myApplicationsPromise }) => {
               <th>Company Name</th>
               <th>Job Title</th>
               <th>Information</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>

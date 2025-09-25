@@ -1,33 +1,53 @@
 import React from "react";
 import useAuth from "../Hooks/useAuth";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const AddJobs = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
 
-  const handleAddAJob = e => {
+  const handleAddAJob = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    
-    // salary range 
-    const {min, max, currency, ...newJob} = data;
-    newJob.salaryRange = {min, max, currency};
+
+    // salary range
+    const { min, max, currency, ...newJob } = data;
+    newJob.salaryRange = { min, max, currency };
 
     // requirements
     const requirementsString = newJob.requirements;
-    const oldRequirements = requirementsString.split(',');
-    const newRequirements = oldRequirements.map(req => req.trim());
+    const oldRequirements = requirementsString.split(",");
+    const newRequirements = oldRequirements.map((req) => req.trim());
     newJob.requirements = newRequirements;
 
     // responsibilities
     const resString = newJob.responsibilities;
-    const oldRes = resString.split(',');
-    const newRes = oldRes.map(res => res.trim());
+    const oldRes = resString.split(",");
+    const newRes = oldRes.map((res) => res.trim());
     newJob.responsibilities = newRes;
 
-    console.log(newJob)
-  }
+    newJob.status = "active";
+
+    // Database save
+    axios
+      .post("http://localhost:3000/jobs", newJob)
+      .then((res) => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Job added successfully.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div>
       <h2 className="text-4xl text-center mt-5 mb-5"> Add A Job</h2>
@@ -182,7 +202,11 @@ const AddJobs = () => {
           />
         </fieldset>
 
-        <input type="submit" className="btn mt-3 mb-4 p" value="Add Job"></input>
+        <input
+          type="submit"
+          className="btn mt-3 mb-4 p"
+          value="Add Job"
+        ></input>
       </form>
     </div>
   );

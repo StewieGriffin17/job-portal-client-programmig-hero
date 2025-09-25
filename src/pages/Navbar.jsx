@@ -27,10 +27,15 @@ const Navbar = () => {
           </li>
         </>
       )}
+
+      {/* For recruiter */}
       {user && (
         <>
           <li>
             <NavLink to="addjob">Add Job</NavLink>
+          </li>
+          <li>
+            <NavLink to="postedjobs">Posted Jobs</NavLink>
           </li>
         </>
       )}
