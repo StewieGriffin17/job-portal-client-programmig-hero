@@ -3,10 +3,14 @@ import ApplicationStat from "./ApplicationStat";
 import ApplicationList from "./ApplicationList";
 import useAuth from "../Hooks/useAuth";
 
-const myApplicationsPromise = (email) => {
+const myApplicationsPromise = (email, token) => {
   return fetch(`http://localhost:3000/applications?email=${email}`, {
-    credentials: "include",
-  }).then((res) => res.json());
+    headers: {
+      authorization: `Bearer ${token}`
+    }
+  }).then(
+    (res) => res.json()
+  );
 };
 
 const MyApplications = () => {
@@ -16,7 +20,7 @@ const MyApplications = () => {
     <div>
       <Suspense fallback={"Loading Application List"}>
         <ApplicationList
-          myApplicationsPromise={myApplicationsPromise(user.email)}
+          myApplicationsPromise={myApplicationsPromise(user.email, user.accessToken)}
         ></ApplicationList>
       </Suspense>
     </div>
